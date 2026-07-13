@@ -1,0 +1,23 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# This tells the editor to save changes straight to posts.json
+media_folder: "uploads"
+
+collections:
+  - name: "posts"
+    label: "Blog Posts"
+    files:
+      - name: "posts"
+        label: "All Posts"
+        file: "posts.json"
+        fields:
+          - label: "Posts"
+            name: "posts"
+            widget: "list"
+            summary: "{{title}} — {{date}}"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Date", name: "date", widget: "string", hint: "Write it however you like, e.g. July 13, 2026" }
+              - { label: "Post text", name: "body", widget: "text", hint: "Leave a blank line between paragraphs" }
