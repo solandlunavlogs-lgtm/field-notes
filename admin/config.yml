@@ -1,8 +1,8 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: solandlunavlogs-lgtm/field-notes
   branch: main
 
-# This tells the editor to save changes straight to posts.json
 media_folder: "uploads"
 
 collections:
