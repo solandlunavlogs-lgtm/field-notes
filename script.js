@@ -1,30 +1,24 @@
-async function renderPosts() {
-  const container = document.getElementById('entries');
+function slugify(title) {
+  return title
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
 
-  let posts = [];
-  try {
-    const res = await fetch('posts.json', { cache: 'no-store' });
-    const data = await res.json();
-    posts = data.posts || [];
-  } catch (err) {
-    container.innerHTML = '<p class="empty-state">Couldn\'t load posts.</p>';
-    return;
-  }
+function stripMarkdown(text) {
+  return text
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, '')   // images
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1') // links
+    .replace(/[#*_`>]/g, '')                 // formatting chars
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 
-  if (posts.length === 0) {
-    container.innerHTML = '<p class="empty-state">No entries yet.</p>';
-    return;
-  }
-
-  container.innerHTML = posts.map(post => `
-    <article class="entry">
-      <span class="entry-stamp">${escapeHTML(post.date)}</span>
-      <h2 class="entry-title">${escapeHTML(post.title)}</h2>
-      <div class="entry-body">
-        ${post.body.split(/\n\s*\n/).map(paragraph => `<p>${escapeHTML(paragraph.trim())}</p>`).join('')}
-      </div>
-    </article>
-  `).join('');
+function snippet(body, length = 140) {
+  const firstParagraph = body.split(/\n\s*\n/)[0] || '';
+  const clean = stripMarkdown(firstParagraph);
+  return clean.length > length ? clean.slice(0, length).trim() + '…' : clean;
 }
 
 function escapeHTML(str) {
@@ -33,4 +27,18 @@ function escapeHTML(str) {
   return div.innerHTML;
 }
 
-renderPosts();
+let allPosts = [];
+
+function renderList(posts) {
+  const container = document.getElementById('entries');
+
+  if (posts.length === 0) {
+    container.innerHTML = '<p class="empty-state">No entries found.</p>';
+    return;
+  }
+
+  container.innerHTML = posts.map(post => `
+    <a class="entry-card" href="post.html?slug=${encodeURIComponent(slugify(post.title))}">
+      <span class="entry-stamp">${escapeHTML(post.date)}</span>
+      <h2 class="entry-title">${escapeHTML(post.title)}</h2>
+      <p class="
