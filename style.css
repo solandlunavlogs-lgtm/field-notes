@@ -1,4 +1,4 @@
-:root {
+  :root {
   --paper: #F5F1E7;
   --paper-edge: #ECE5D4;
   --ink: #262521;
@@ -76,8 +76,7 @@ body {
 }
 
 .entry {
-  position: relative;
-  padding: 3rem 0 3rem 4.5rem;
+  padding: 3rem 0;
   border-bottom: 1px solid var(--line);
 }
 
@@ -86,10 +85,8 @@ body {
 }
 
 .entry-stamp {
-  position: absolute;
-  left: -0.25rem;
-  top: 3.1rem;
-  transform: rotate(-3deg);
+  display: inline-block;
+  transform: rotate(-2deg);
   font-family: var(--mono);
   font-size: 0.68rem;
   letter-spacing: 0.02em;
@@ -99,6 +96,7 @@ body {
   padding: 0.3rem 0.5rem;
   white-space: nowrap;
   background: var(--paper);
+  margin-bottom: 1rem;
 }
 
 .entry-title {
@@ -153,19 +151,4 @@ body {
 :focus-visible {
   outline: 2px solid var(--indigo);
   outline-offset: 3px;
-}
-
-/* ---------- Responsive ---------- */
-
-@media (max-width: 560px) {
-  .entry {
-    padding-left: 0;
-    padding-top: 3.5rem;
-  }
-  .entry-stamp {
-    position: static;
-    display: inline-block;
-    transform: rotate(-2deg);
-    margin-bottom: 1rem;
-  }
 }
