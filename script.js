@@ -41,4 +41,36 @@ function renderList(posts) {
     <a class="entry-card" href="post.html?slug=${encodeURIComponent(slugify(post.title))}">
       <span class="entry-stamp">${escapeHTML(post.date)}</span>
       <h2 class="entry-title">${escapeHTML(post.title)}</h2>
-      <p class="
+      <p class="entry-snippet">${escapeHTML(snippet(post.body))}</p>
+    </a>
+  `).join('');
+}
+
+async function init() {
+  const container = document.getElementById('entries');
+  try {
+    const res = await fetch('posts.json', { cache: 'no-store' });
+    const data = await res.json();
+    allPosts = data.posts || [];
+  } catch (err) {
+    container.innerHTML = '<p class="empty-state">Couldn\'t load posts.</p>';
+    return;
+  }
+
+  renderList(allPosts);
+
+  const searchInput = document.getElementById('search');
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.toLowerCase().trim();
+    if (!q) {
+      renderList(allPosts);
+      return;
+    }
+    const filtered = allPosts.filter(post =>
+      post.title.toLowerCase().includes(q) || post.body.toLowerCase().includes(q)
+    );
+    renderList(filtered);
+  });
+}
+
+init();
